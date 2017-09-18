@@ -58,7 +58,8 @@ for i = 1:length(devices)
     KinectParams(idx).calibrationDate = cur_date;
     KinectParams(idx).calibrationTime = cur_time;
     
-    waitbar(i/length(devices), h, sprintf(['Calibrated ', num2str(i), '/', num2str(length(devices)), ' device(s)']))
+    waitbar(i/length(devices), h, sprintf(['Calibrated ', num2str(i),...
+        '/', num2str(length(devices)), ' device(s)']));
 end
 
 delete(h);
