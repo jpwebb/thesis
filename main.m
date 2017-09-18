@@ -9,22 +9,14 @@ generateKinectInfoFile();
 % Initialise with no devices selected for calibration
 devices = 0;
 
-
 while ~devices
     devices = getDevices(KinectInfo);
 end
 
-cal_type = [];
+calibration_type = [];
 
-while strcmp(cal_type, 'r') + strcmp(cal_type, 'd') == 0
-    cal_type = input('Enter the type of calibration to perform (enter ''r'' for RGB or ''d'' for Depth): ', 's');
-end
-
-switch cal_type
-    case 'r'
-        cal_type = 'RGB';
-    case 'd'
-        cal_type = 'D';
+while isempty(calibration_type)
+    calibration_type = getCalibrationType();
 end
 
 serial = zeros(length(devices));
@@ -48,7 +40,7 @@ for i = 1:length(devices)
     id = devices(i);
     idx = find([KinectInfo.ID] == id);
     serial = KinectInfo(idx).Serial;
-    im_folder = strcat('Kinect_', serial, filesep, cal_type, filesep);
+    im_folder = strcat('Kinect_', serial, filesep, calibration_type, filesep);
     cameraParams = calibrate(36, id, serial, im_folder);
 
     cur_date = datestr(datetime('now'), 'dd-mm-yyyy');
