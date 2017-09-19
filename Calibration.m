@@ -1,5 +1,5 @@
 %% 1. Get images to process
-S = dir(strcat('Kinect_005*', filesep, '*.png'));
+S = dir(strcat('Flir*', filesep, '*.png'));
 c = struct2cell(S);
 imageFileNames = strcat(c(2,:)', filesep, c(1,:)');
 
@@ -18,12 +18,12 @@ originalImage = imread(imageFileNames{1});
 [mrows, ncols, ~] = size(originalImage);
 
 %% 4. Generate world coordinates of the corners of the squares
-squareSize = 25;  % in units of 'millimeters'
+squareSize = 36;  % in units of 'millimeters'
 worldPoints = generateCheckerboardPoints(boardSize, squareSize);
 
-[cx, cv, fx, fv] = initialGuess();
+% [cx, cv, fx, fv] = initialGuess();
 s = 0;
-init_intrinsics = [fx, 0, 0; s, fv, 0; cx, cv, 1];
+init_intrinsics = [];%[fx, 0, 0; s, fv, 0; cx, cv, 1];
 
 %% 5. Calibrate the camera
 [cameraParams, imagesUsed, estimationErrors] = estimateCameraParameters(imagePoints, worldPoints, ...
@@ -49,3 +49,13 @@ displayErrors(estimationErrors, cameraParams);
 % See additional examples of how to use the calibration data.  At the prompt type:
 % showdemo('MeasuringPlanarObjectsExample')
 % showdemo('StructureFromMotionExample')
+
+%% Display original and undistorted images
+
+% Suppress warning message about display being too big
+warning('off', 'Images:initSize:adjustingMag');
+
+% Display the image pair
+figure('Name', 'Original Image (left) and Undistorted Image (right)',...
+    'NumberTitle', 'off');
+imshowpair(originalImage, undistortedImage, 'montage');

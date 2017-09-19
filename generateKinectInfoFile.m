@@ -2,8 +2,6 @@
 % struct with information related to the device IDs and serial numbers that
 % have data associated with them.
 
-close all; clear; clc;
-
 % Load csv data from the 2nd row onwards
 data = csvread('kinect_device_info.csv', 1);
 
