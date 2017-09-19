@@ -15,7 +15,6 @@ from save_frame import *
 from configure_write_directory import *
 from get_intrinsics import *
 
-
 # Determine full path of the directory the program resides in
 program_directory = os.path.abspath(os.path.curdir)
 
@@ -25,6 +24,21 @@ pattern_size = (9, 6)
 flag = 0
 frame_freq = 27
 frame_count = frame_freq
+
+acquisition_type = 0
+
+standard_mode = 's'
+overlap_mode = 'o'
+
+while not(acquisition_type == standard_mode or acquisition_type == overlap_mode):
+    prompt = 'Enter \'' + standard_mode + '\' to run in standard mode or \'' + overlap_mode + '\' to capture overlapped images: '
+    acquisition_type = raw_input(prompt)
+    if acquisition_type == standard_mode:
+        print 'Running program in standard mode (individual device data acquisition)'
+    elif acquisition_type == overlap_mode:
+        print 'Running program in overlap mode (stores captured images in the overlap folder)'
+    else:
+        print 'Unexpected entry, please try again.'
 
 rgb_width = 1920
 rgb_height = 1080
@@ -61,10 +75,15 @@ serial = fn.getDeviceSerialNumber(0)
 device = fn.openDevice(serial, pipeline=pipeline)
 
 # Generate the full write directory (based on device serial number)
-rgb_channel = 'RGB'
-write_dir_rgb = configure_write_directory(program_directory, rgb_channel, serial)
-d_channel = 'D'
-write_dir_d = configure_write_directory(program_directory, d_channel, serial)
+if acquisition_type == standard_mode:
+    rgb_channel = 'RGB'
+    write_dir_rgb = configure_write_directory(program_directory, rgb_channel, serial)
+    d_channel = 'D'
+    write_dir_d = configure_write_directory(program_directory, d_channel, serial)
+elif acquisition_type == overlap_mode:
+    overlap_channel = 'Overlap'
+    write_dir_rgb = configure_write_directory(program_directory, overlap_channel, serial)
+    overlap_count = 0
 
 types = (FrameType.Color | FrameType.Ir | FrameType.Depth)
 listener = SyncMultiFrameListener(types)
@@ -83,8 +102,9 @@ registration = Registration(device.getIrCameraParams(),
 undistorted = Frame(512, 424, 4)
 registered = Frame(512, 424, 4)
 
-get_intrinsics(device, rgb_channel, write_dir_rgb)
-get_intrinsics(device, d_channel, write_dir_d)
+if acquisition_type == standard_mode:
+    get_intrinsics(device, rgb_channel, write_dir_rgb)
+    get_intrinsics(device, d_channel, write_dir_d)
 
 while True:
 
@@ -129,15 +149,20 @@ while True:
         if move_windows: cv2.moveWindow("color", d_width, d_height + height_offset)
     # Save the Colour and Depth frames and flash a green circle on the colour frame display.
     elif flag and frame_count == 0:
-        time_stamp = datetime.now().strftime('%d%m%Y_%H%M%S_%f')
+        if acquisition_type == standard_mode:
+            im_name = datetime.now().strftime('%d%m%Y_%H%M%S_%f')
+        elif acquisition_type == overlap_mode:
+            overlap_count += 1
+            im_name = datetime.now().strftime('%d%m%Y_') + format(overlap_count, '03')
         frame_count = frame_freq
         if 1:  # checkFrame(rgb_frame_full, pattern_size):
             add_spot(rgb_frame_show, int(rgb_width / rgb_scale), 'green')
             cv2.imshow("color", rgb_frame_show)
             if move_windows: cv2.moveWindow("color", d_width, d_height + height_offset)
             # Save the current RGB frame (named by current time)
-            save_frame(write_dir_rgb, time_stamp, rgb_frame_save)
-            save_frame(write_dir_d, time_stamp, depth_frame_save)
+            save_frame(write_dir_rgb, im_name, rgb_frame_save)
+            if acquisition_type == standard_mode:
+                save_frame(write_dir_d, im_name, depth_frame_save)
     # Display a red circle on the colour frame if in standby mode.
     else:
         add_spot(rgb_frame_show, int(rgb_width / rgb_scale), 'red')

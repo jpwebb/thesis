@@ -25,3 +25,16 @@ else
     fprintf('Error! No selection main, program exiting.\n\n');
     return;
 end
+
+% Get user input after a calibration has been performed
+user_choice_post = menu('Would you like to calibrate another device?',...
+    'Yes', 'No');
+
+if user_choice_post == 1
+    close all;
+    main();
+else
+    fprintf('Exiting Program.\n\n');
+    close all;
+    return;
+end

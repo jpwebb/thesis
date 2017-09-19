@@ -75,17 +75,4 @@ user_choice = menu('Would you like to calibrate another Kinect device?',...
 if user_choice == 1
     close all;
     mainKinect();
-else
-    % Get user input
-    user_choice = menu('Would you like to calibrate another device?',...
-        'Yes', 'No');
-    
-    if user_choice == 1
-        close all;
-        main();
-    else
-        fprintf('Exiting Program.\n\n');
-        close all; clear;
-        return;
-    end
 end
