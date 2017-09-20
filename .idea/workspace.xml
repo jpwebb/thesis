@@ -1,40 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5af3c562-d180-4822-8f8d-f7f307f600ab" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_180956_478557.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_180958_478712.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181000_482646.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181002_478331.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181004_481427.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181006_478691.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181008_479089.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181010_479911.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181012_479956.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181014_481318.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181016_547559.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181018_548591.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181020_543939.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/17092017_181022_545690.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/D/intrinsics.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_180956_478557.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_180958_478712.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_181000_482646.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_181004_481427.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_181008_479089.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_181010_479911.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_181014_481318.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_181016_547559.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/17092017_181018_548591.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Kinect_080723134934/RGB/intrinsics.txt" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KinectParams.mat" afterPath="$PROJECT_DIR$/KinectParams.mat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kinect_devices.mat" afterPath="$PROJECT_DIR$/kinect_devices.mat" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kinect_device_info.csv" afterPath="$PROJECT_DIR$/kinect_device_info.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.m" afterPath="$PROJECT_DIR$/main.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mainKinect.m" afterPath="$PROJECT_DIR$/mainKinect.m" />
-    </list>
+    <list default="true" id="5af3c562-d180-4822-8f8d-f7f307f600ab" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +27,7 @@
         <entry file="file://$PROJECT_DIR$/configure_write_directory.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="183">
-              <caret line="19" column="8" lean-forward="true" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+              <caret line="19" column="8" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -87,8 +54,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="345" />
-    <option name="y" value="136" />
+    <option name="y" value="23" />
     <option name="width" value="1237" />
     <option name="height" value="697" />
   </component>
@@ -167,12 +133,12 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="345" y="136" width="1237" height="697" extended-state="0" />
+    <frame x="0" y="23" width="1237" height="697" extended-state="0" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24937238" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32890365" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32890365" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32890365" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -210,7 +176,7 @@
     <entry file="file://$PROJECT_DIR$/configure_write_directory.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="183">
-          <caret line="19" column="8" lean-forward="true" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+          <caret line="19" column="8" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

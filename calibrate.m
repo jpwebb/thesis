@@ -22,9 +22,14 @@ originalImage = imread(imageFileNames{1});
 %% 4. Generate world coordinates of the corners of the squares
 worldPoints = generateCheckerboardPoints(boardSize, square_size);
 
-[cx, cv, fx, fv] = initialGuess(im_folder);
-s = 0;
-init_intrinsics = [fx, 0, 0; s, fv, 0; cx, cv, 1];
+if contains(im_folder, 'Kinect')
+    [cx, cv, fx, fv] = initialGuess(im_folder);
+    s = 0;
+    init_intrinsics = [fx, 0, 0; s, fv, 0; cx, cv, 1];
+elseif contains(im_folder, 'Point_Grey')
+    init_intrinsics = [];
+end
+    
 
 %% 5. Calibrate the camera
 [cameraParams, ~, estimationErrors] = estimateCameraParameters(imagePoints, worldPoints, ...

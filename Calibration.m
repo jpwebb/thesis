@@ -1,5 +1,6 @@
 %% 1. Get images to process
-S = dir(strcat('Flir*', filesep, '*.png'));
+id = 1;
+S = dir(strcat('PointGrey_', num2str(id), filesep, '*.png'));
 c = struct2cell(S);
 imageFileNames = strcat(c(2,:)', filesep, c(1,:)');
 

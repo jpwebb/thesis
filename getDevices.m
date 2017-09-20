@@ -3,17 +3,17 @@
 % "1" returns "[1]"), a list of specific numbers (e.g. "1, 3" returns "[1, 
 % 3]") or a list of continuous numbers (e.g. "1:3" returns "[1, 2, 3]").
 
-function devices = getDevices(KinectInfo)
+function devices = getDevices(DeviceInfo)
 
 % Initialise an error flag
 error_flag = 0;
 
 % Find the minimum and maximum ID numbers that should be accepted.
-min_device = min(cell2mat({KinectInfo.ID}'));
-max_device = max(cell2mat({KinectInfo.ID}'));
+min_device = min(cell2mat({DeviceInfo.ID}'));
+max_device = max(cell2mat({DeviceInfo.ID}'));
 
 % Generate a nice list of the device numbers (ordered and formatted)
-device_list = cell2mat({KinectInfo.ID});
+device_list = cell2mat({DeviceInfo.ID});
 device_list = sort(device_list);
 device_list = sprintf('%.0f, ' , device_list);
 device_list = device_list(1:end-2);
@@ -33,7 +33,7 @@ elseif any(devices > max_device)
 elseif any(devices < min_device)
     fprintf('\nError! You entered a number that was too low. Please try again.\n\n');
     error_flag = 1;
-elseif length(devices) > length(KinectInfo)
+elseif length(devices) > length(DeviceInfo)
     fprintf('\nError! More devices chosen than data recorded. Please try again.\n\n');
     error_flag = 1;
 elseif length(devices) - length(unique(devices)) ~= 0
