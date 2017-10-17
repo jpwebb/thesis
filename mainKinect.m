@@ -1,10 +1,13 @@
-%% Calibrate Kinect device(s)
+%% Calibrate Kinect RGB-D cameras
 
-default_square_size = 36; % mm
-square_size = getSquareSize(default_square_size);
+default_square_size = 90; % mm
 
 % Grab Kinect info from csv file
 generateKinectInfoFile();
+
+if ~exist('KinectInfo', 'var')
+    return;
+end
 
 % Initialise with no devices selected for calibration
 devices = 0;
@@ -13,11 +16,13 @@ while ~devices
     devices = getDevices(KinectInfo);
 end
 
-calibration_type = [];
+calibration_channel = [];
 
-while isempty(calibration_type)
-    calibration_type = getCalibrationType();
+while isempty(calibration_channel)
+    calibration_channel = getCalibrationChannel();
 end
+
+square_size = getSquareSize(default_square_size);
 
 serial = zeros(length(devices));
 cameraParams = [];
@@ -25,27 +30,43 @@ h = waitbar(0, 'Please Wait...');
 
 if exist('KinectParams.mat', 'file') == 2
     load('KinectParams.mat');
-else
+else    
     KinectParams = struct('deviceID', [], 'deviceSerialNumber', [],...
+        'channel', [], 'intrinsicParams', [], ...
         'deviceParams', [], 'calibrationDate', [], 'calibrationTime', []);
 end
 
-for i = 1:length(KinectInfo)
-    KinectParams(i).deviceID = KinectInfo(i).ID;
-    KinectParams(i).deviceSerialNumber = KinectInfo(i).Serial;
+local_idx = 1;
+
+for i = 1 : length(KinectInfo)
+    KinectParams(local_idx).deviceID = KinectInfo(i).ID;
+    KinectParams(local_idx + 1).deviceID = KinectInfo(i).ID;
+    KinectParams(local_idx).deviceSerialNumber = KinectInfo(i).Serial;
+    KinectParams(local_idx + 1).deviceSerialNumber = KinectInfo(i).Serial;
+    KinectParams(local_idx).channel = 'RGB';
+    KinectParams(local_idx + 1).channel = 'D';
+    local_idx = local_idx + 2;
 end
 
 for i = 1:length(devices)
     
     id = devices(i);
-    idx = find([KinectInfo.ID] == id);
-    serial = KinectInfo(idx).Serial;
-    im_folder = strcat('Kinect_', serial, filesep, calibration_type, filesep);
-    cameraParams = calibrate(36, id, serial, im_folder);
+    right_id = find([KinectParams.deviceID] == id);
+    right_channel = find(strcmpi({KinectParams.channel}, calibration_channel));
+    idx = sum([right_id, right_channel]) - sum(unique([right_id, right_channel]));
+    serial = KinectParams(idx).deviceSerialNumber;
+    im_folder = strcat('Kinect_', serial, filesep, calibration_channel, filesep);
+    cameraParams = calibrate(default_square_size, id, serial, im_folder);
     
     cur_date = datestr(datetime('now'), 'dd-mm-yyyy');
     cur_time = datestr(datetime('now'), 'HH:MM:SS');
     
+    KinectParams(idx).intrinsicParams = struct('fx', [], 'fy', [], 'cx', [], 'cy', [], 's', []);
+    KinectParams(idx).intrinsicParams.fx = cameraParams.IntrinsicMatrix(1, 1);
+    KinectParams(idx).intrinsicParams.fy = cameraParams.IntrinsicMatrix(2, 2);
+    KinectParams(idx).intrinsicParams.cx = cameraParams.IntrinsicMatrix(3, 1);
+    KinectParams(idx).intrinsicParams.cy = cameraParams.IntrinsicMatrix(3, 2);
+    KinectParams(idx).intrinsicParams.s  = cameraParams.IntrinsicMatrix(2, 1);
     KinectParams(idx).deviceParams = cameraParams;
     KinectParams(idx).calibrationDate = cur_date;
     KinectParams(idx).calibrationTime = cur_time;

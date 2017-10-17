@@ -1,22 +1,38 @@
-close all; clc;
+close all; clear; clc;
 
 %% 1. Get images to process
-S = dir(strcat('/Users/jasonwebb/Documents/GitHub/thesis/Kinect_005224162247/Overlap', filesep, '*.png'));
-c = struct2cell(S);
-imageFileNames1 = strcat(c(2,:)', filesep, c(1,:)');
 
-S = dir(strcat('/Users/jasonwebb/Documents/GitHub/thesis/Kinect_080723134947/Overlap', filesep, '*.png'));
-c = struct2cell(S);
-imageFileNames2 = strcat(c(2,:)', filesep, c(1,:)');
+directory1 = '/Users/jasonwebb/Documents/GitHub/thesis/temp/cam1';
+imageFileNames1 = getImageList(directory1);
+clear directory1
+
+%%
+
+directory2 = '/Users/jasonwebb/Documents/GitHub/thesis/temp/cam2';
+imageFileNames2 = getImageList(directory2);
+clear directory2
+
+%%
+% for i = 1 : length(imageFileNames1)
+%     figure, imshowpair(imread(char(imageFileNames1(i))), imread(char(imageFileNames2(i))), 'montage');
+%     pause();
+%     close all;
+% end
 
 %% 2. Detect checkerboards in images & discard images with no target
-[imagePoints, boardSize, imagesUsed] = detectCheckerboardPoints(imageFileNames1, imageFileNames2, 'ShowProgressBar', 1);
+[imagePoints, boardSize, imagesUsed] = detectCheckerboardPoints2(imageFileNames1, imageFileNames2, 'ShowProgressBar', 1);
 
 % imageFileNamesNoBoard = imageFileNames(imcomplement(imagesUsed));
 % if ~isempty(imageFileNamesNoBoard)
 %     
 %     delete(imageFileNamesNoBoard{:});
 % end
+
+if sum(imagesUsed) <= 2
+    fprintf('Error, not enough checkerboard patterns detected.\n');
+    fprintf('Must be greater than 2.\n');
+    return;
+end
 
 imageFileNames1 = imageFileNames1(imagesUsed);
 imageFileNames2 = imageFileNames2(imagesUsed);
@@ -26,7 +42,7 @@ I1 = imread(imageFileNames1{1});
 [mrows, ncols, ~] = size(I1);
 
 %% 4. Generate world coordinates of the corners of the squares
-squareSize = 36;  % in units of 'millimeters'
+squareSize = 90;  % in units of 'millimeters'
 worldPoints = generateCheckerboardPoints(boardSize, squareSize);
 
 % [cx, cv, fx, fv] = initialGuess();

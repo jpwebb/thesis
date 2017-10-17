@@ -1,10 +1,13 @@
-%% Calibrate Kinect device(s)
+%% Calibrate Point Grey RGB cameras
 
 default_square_size = 36; % mm
-square_size = getSquareSize(default_square_size);
 
 % Grab Point Grey info from csv file
 generatePointGreyInfoFile();
+
+if ~exist('PointGreyInfo', 'var')
+    return;
+end
 
 % Initialise with no devices selected for calibration
 devices = 0;
@@ -12,6 +15,8 @@ devices = 0;
 while ~devices
     devices = getDevices(PointGreyInfo);
 end
+
+square_size = getSquareSize(default_square_size);
 
 serial = zeros(length(devices));
 cameraParams = [];
@@ -21,25 +26,36 @@ if exist('PointGreyParams.mat', 'file') == 2
     load('PointGreyParams.mat');
 else
     PointGreyParams = struct('deviceID', [], 'deviceSerialNumber', [],...
+        'channel', [], 'intrinsicParams', [], ...
         'deviceParams', [], 'calibrationDate', [], 'calibrationTime', []);
 end
 
-for i = 1:length(PointGreyInfo)
-    PointGreyParams(i).deviceID = PointGreyInfo(i).ID;
-    PointGreyParams(i).deviceSerialNumber = PointGreyInfo(i).Serial;
+local_idx = 1;
+
+for i = 1 : length(PointGreyInfo)
+    PointGreyParams(local_idx).deviceID = PointGreyInfo(i).ID;
+    PointGreyParams(local_idx).deviceSerialNumber = PointGreyInfo(i).Serial;
+    PointGreyParams(local_idx).channel = 'RGB';
+    local_idx = local_idx + 1;
 end
 
 for i = 1:length(devices)
     
     id = devices(i);
-    idx = find([PointGreyInfo.ID] == id);
-    serial = PointGreyInfo(idx).Serial;
+    idx = find([PointGreyParams.deviceID] == id);
+    serial = PointGreyParams(idx).deviceSerialNumber;
     im_folder = strcat('Point_Grey_', serial, filesep);
-    cameraParams = calibrate(36, id, serial, im_folder);
+    cameraParams = calibrate(default_square_size, id, serial, im_folder);
     
     cur_date = datestr(datetime('now'), 'dd-mm-yyyy');
     cur_time = datestr(datetime('now'), 'HH:MM:SS');
     
+    PointGreyParams(idx).intrinsicParams = struct('fx', [], 'fy', [], 'cx', [], 'cy', [], 's', []);
+    PointGreyParams(idx).intrinsicParams.fx = cameraParams.IntrinsicMatrix(1, 1);
+    PointGreyParams(idx).intrinsicParams.fy = cameraParams.IntrinsicMatrix(2, 2);
+    PointGreyParams(idx).intrinsicParams.cx = cameraParams.IntrinsicMatrix(3, 1);
+    PointGreyParams(idx).intrinsicParams.cy = cameraParams.IntrinsicMatrix(3, 2);
+    PointGreyParams(idx).intrinsicParams.s  = cameraParams.IntrinsicMatrix(2, 1);
     PointGreyParams(idx).deviceParams = cameraParams;
     PointGreyParams(idx).calibrationDate = cur_date;
     PointGreyParams(idx).calibrationTime = cur_time;
@@ -51,8 +67,6 @@ end
 delete(h);
 
 save('PointGreyParams', 'PointGreyParams');
-
-% getIntrinsics
 
 %% Ask if the user wants to calibrate another device
 

@@ -8,7 +8,7 @@ import os
 #   write_dir   - Directory for the specified channel.
 # Outputs:
 #   None.
-def get_intrinsics(device, channel, write_dir):
+def get_intrinsics(device, channel, program_dir, serial_number):
 
     # Get the parameters off the device, dependent on the specified channel.
     if channel == 'RGB':
@@ -25,7 +25,8 @@ def get_intrinsics(device, channel, write_dir):
         return
 
     # Create an intrinsics.txt file and write the data to it.
-    intrinsics = write_dir + os.sep + 'intrinsics.txt'
+    write_dir = program_dir + os.sep + 'Kinect_' + serial_number
+    intrinsics = write_dir + os.sep + channel + '_intrinsics.txt'
     f = open(intrinsics, "w")
     f.write('%f\n' % cx)
     f.write('%f\n' % cy)

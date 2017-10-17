@@ -2,15 +2,24 @@
 % struct with information related to the device IDs and serial numbers that
 % have data associated with them.
 
-% Load csv data from the 2nd row onwards
-data = csvread('point_grey_device_info.csv', 1);
+% Load data from an externally maintained text file
+fid = fopen('point_grey_device_info.txt');
+if fid == -1
+    fprintf('Error, file not found!\n\n');
+    fprintf(['The calibration tool relies on an external text file ',...
+        'with device ID numbers (first column)\nand serial numbers ',...
+        '(second column) called ''point_grey_device_info.txt''.\n\n',...
+        'Generate this file and try again.\n']);
+    return;
+end
+data = textscan(fid, '', 'delimiter', '\t', 'headerlines', 1);
 
 % Strip the first column as IDs
-ids = data(:,1);
+ids = data{1};
 
 % Strip the second column as Serial Numbers (left-padded with leading zeros
 % such that all serial numbers are 12 digits)
-serials = char(pad(string(data(:,2)), 12, 'left', '0'));
+serials = char(pad(string(data{2}), 12, 'left', '0'));
 
 % Create an empty struct to be filled
 PointGreyInfo = struct('ID', [], 'Serial', []);
