@@ -5,6 +5,12 @@
 
 function devices = getDevices(DeviceInfo)
 
+fields = fieldnames(DeviceInfo);
+final_field = char(fields(end));
+
+DeviceInfo = DeviceInfo([DeviceInfo.(final_field)] == 1);
+DeviceInfo = rmfield(DeviceInfo, final_field);
+
 % Initialise an error flag
 error_flag = false;
 

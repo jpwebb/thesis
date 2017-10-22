@@ -21,7 +21,43 @@ clear directory2
 %     close all;
 % end
 
+%% Single One
 
+imageFileNames = imageFileNames1;
+[imagePoints, boardSize, imagesUsed] = detectCheckerboardPoints2(imageFileNames, 'ShowProgressBar', 1);
+imageFileNames = imageFileNames(imagesUsed);
+originalImage = imread(imageFileNames{1});
+[mrows, ncols, ~] = size(originalImage);
+worldPoints = generateCheckerboardPoints(boardSize, squareSize);
+[cameraParams, ~, estimationErrors] = estimateCameraParameters(imagePoints, worldPoints, ...
+    'EstimateSkew', false, 'EstimateTangentialDistortion', false, ...
+    'NumRadialDistortionCoefficients', 2, 'WorldUnits', 'millimeters', ...
+    'InitialIntrinsicMatrix', [], 'InitialRadialDistortion', [], ...
+    'ImageSize', [mrows, ncols]);
+h1 = figure; showReprojectionErrors(cameraParams);
+set(gca, 'FontSize', 14);
+h2 = figure; showExtrinsics(cameraParams, 'CameraCentric');
+set(gca, 'FontSize', 14);
+
+%% Single Two
+
+imageFileNames = imageFileNames2;
+[imagePoints, boardSize, imagesUsed] = detectCheckerboardPoints2(imageFileNames, 'ShowProgressBar', 1);
+imageFileNames = imageFileNames(imagesUsed);
+originalImage = imread(imageFileNames{1});
+[mrows, ncols, ~] = size(originalImage);
+worldPoints = generateCheckerboardPoints(boardSize, squareSize);
+[cameraParams, ~, estimationErrors] = estimateCameraParameters(imagePoints, worldPoints, ...
+    'EstimateSkew', false, 'EstimateTangentialDistortion', false, ...
+    'NumRadialDistortionCoefficients', 2, 'WorldUnits', 'millimeters', ...
+    'InitialIntrinsicMatrix', [], 'InitialRadialDistortion', [], ...
+    'ImageSize', [mrows, ncols]);
+h1 = figure; showReprojectionErrors(cameraParams);
+set(gca, 'FontSize', 14);
+h2 = figure; showExtrinsics(cameraParams, 'CameraCentric');
+set(gca, 'FontSize', 14);
+
+%% Stereo
 
 %% 2. Detect checkerboards in images & discard images with no target
 [imagePoints, boardSize, imagesUsed] = detectCheckerboardPoints2(imageFileNames1, imageFileNames2, 'ShowProgressBar', 1);
@@ -64,14 +100,19 @@ init_intrinsics = [];%[fx, 0, 0; s, fv, 0; cx, cv, 1];
 h1=figure; showReprojectionErrors(stereoParams);
 fprintf(['Mean Reprojection Error: ', ...
     num2str(stereoParams.MeanReprojectionError), ' pixels\n']);
+set(gca, 'FontSize', 14);
+%% 
+h2=figure;
+showExtrinsics(stereoParams, 'CameraCentric');
+set(gca, 'FontSize', 14);
 
 %% 7. Visualize pattern locations
-h2=figure;
+h3=figure;
 showExtrinsics3(stereoParams, 'CameraCentric');
 set(gca, 'FontSize', 14);
 hold on;
 
-for i = 1:4
+for i = 1:3
     
 stereoParams2 = toStruct(stereoParams);
 % t2 = (stereoParams2.RotationOfCamera2 * stereoParams2.TranslationOfCamera2' + stereoParams.TranslationOfCamera2')';

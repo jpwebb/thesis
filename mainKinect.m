@@ -26,6 +26,7 @@ square_size = getSquareSize(default_square_size);
 
 serial = zeros(length(devices));
 cameraParams = [];
+
 h = waitbar(0, 'Please Wait...');
 
 if exist('KinectParams.mat', 'file') == 2
@@ -51,22 +52,34 @@ end
 for i = 1:length(devices)
     
     id = devices(i);
-    right_id = find([KinectParams.deviceID] == id);
-    right_channel = find(strcmpi({KinectParams.channel}, calibration_channel));
-    idx = sum([right_id, right_channel]) - sum(unique([right_id, right_channel]));
+    idx = find([KinectParams.deviceID] == id & string({KinectParams.channel}) == calibration_channel);
+
     serial = KinectParams(idx).deviceSerialNumber;
     im_folder = strcat('Kinect_', serial, filesep, calibration_channel, filesep);
-    cameraParams = calibrate(default_square_size, id, serial, im_folder);
+    
+    images_found = checkForImages(im_folder);
+    
+    if ~images_found
+        warning_msg = ['No ', calibration_channel, ' images found for device with ID ', num2str(id), '\n'];
+        my_warning(warning_msg);
+        continue;
+    end
+    
+    cameraParams = calibrate(square_size, id, serial, im_folder);
+    
+    if isempty(cameraParams)
+        continue;
+    end
     
     cur_date = datestr(datetime('now'), 'dd-mm-yyyy');
     cur_time = datestr(datetime('now'), 'HH:MM:SS');
     
     KinectParams(idx).intrinsicParams = struct('fx', [], 'fy', [], 'cx', [], 'cy', [], 's', []);
-    KinectParams(idx).intrinsicParams.fx = cameraParams.IntrinsicMatrix(1, 1);
-    KinectParams(idx).intrinsicParams.fy = cameraParams.IntrinsicMatrix(2, 2);
-    KinectParams(idx).intrinsicParams.cx = cameraParams.IntrinsicMatrix(3, 1);
-    KinectParams(idx).intrinsicParams.cy = cameraParams.IntrinsicMatrix(3, 2);
-    KinectParams(idx).intrinsicParams.s  = cameraParams.IntrinsicMatrix(2, 1);
+    KinectParams(idx).intrinsicParams.fx = cameraParams.FocalLength(1);
+    KinectParams(idx).intrinsicParams.fy = cameraParams.FocalLength(2);
+    KinectParams(idx).intrinsicParams.cx = cameraParams.PrincipalPoint(1);
+    KinectParams(idx).intrinsicParams.cy = cameraParams.PrincipalPoint(2);
+    KinectParams(idx).intrinsicParams.s  = 0;
     KinectParams(idx).deviceParams = cameraParams;
     KinectParams(idx).calibrationDate = cur_date;
     KinectParams(idx).calibrationTime = cur_time;

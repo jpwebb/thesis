@@ -10,10 +10,7 @@ set(0, 'DefaultUIControlFontSize', 14);
 
 % Get user input
 user_choice = menu('Select the device type for calibration:',...
-    'Kinect', 'Point Grey');
-
-% Replace the default font size
-set(0, 'DefaultUIControlFontSize', UIControl_FontSize_backup);
+    'Kinect', 'Point Grey', 'Other');
 
 % Call the Kinect calibration tool or the Point Grey calibration tool,
 % depending on the user input
@@ -21,20 +18,25 @@ if user_choice == 1
     mainKinect();
 elseif user_choice == 2
     mainPointGrey();
+elseif user_choice == 3
+    mainOther();
 else
-    fprintf('Error, no selection made! Exiting program.\n\n');
-    return;
+    msg = 'No selection made! Exiting program.';
+    my_error(msg);
 end
 
 % Get user input after a calibration has been performed
 user_choice_post = menu('Would you like to calibrate another device?',...
     'Yes', 'No');
 
+% Reset the default font size
+set(0, 'DefaultUIControlFontSize', UIControl_FontSize_backup);
+
 if user_choice_post == 1
     close all;
     calib_main();
 else
-    fprintf('Exiting program.\n\n');
+    fprintf('\nExiting program.\n\n');
 %     close all;
     return;
 end

@@ -51,11 +51,11 @@ for i = 1:length(devices)
     cur_time = datestr(datetime('now'), 'HH:MM:SS');
     
     PointGreyParams(idx).intrinsicParams = struct('fx', [], 'fy', [], 'cx', [], 'cy', [], 's', []);
-    PointGreyParams(idx).intrinsicParams.fx = cameraParams.IntrinsicMatrix(1, 1);
-    PointGreyParams(idx).intrinsicParams.fy = cameraParams.IntrinsicMatrix(2, 2);
-    PointGreyParams(idx).intrinsicParams.cx = cameraParams.IntrinsicMatrix(3, 1);
-    PointGreyParams(idx).intrinsicParams.cy = cameraParams.IntrinsicMatrix(3, 2);
-    PointGreyParams(idx).intrinsicParams.s  = cameraParams.IntrinsicMatrix(2, 1);
+    PointGreyParams(idx).intrinsicParams.fx = cameraParams.FocalLength(1);
+    PointGreyParams(idx).intrinsicParams.fy = cameraParams.FocalLength(2);
+    PointGreyParams(idx).intrinsicParams.cx = cameraParams.PrincipalPoint(1);
+    PointGreyParams(idx).intrinsicParams.cy = cameraParams.PrincipalPoint(2);
+    PointGreyParams(idx).intrinsicParams.s  = 0;
     PointGreyParams(idx).deviceParams = cameraParams;
     PointGreyParams(idx).calibrationDate = cur_date;
     PointGreyParams(idx).calibrationTime = cur_time;

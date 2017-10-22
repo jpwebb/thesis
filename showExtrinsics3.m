@@ -1,4 +1,4 @@
-function ax = showExtrinsics2(cameraParams, camLabel1, camLabel2, varargin)
+function ax = showExtrinsics3(cameraParams, varargin)
 %showExtrinsics Visualize extrinsic camera parameters.
 %   showExtrinsics(cameraParams) renders a 3-D visualization of extrinsic 
 %   parameters of a single calibrated camera or a calibrated stereo pair. 
@@ -228,20 +228,19 @@ end
         
         [rotationMatrices, translationVectors] = ...
             getRotationAndTranslation(cameraParams);
-        sign = 1;
-        for boardIdx = randi(numBoards,1,3)
-            sign = -sign;
+
+        for boardIdx = 1:numBoards            
             R = rotationMatrices(:, :, boardIdx)';
             t = translationVectors(boardIdx, :)';
-            [~, alpha] = getColor(boardIdx, boardColorLookup, highlightIndex);
-            color = [rand(1), rand(1), rand(1)];
+            [color, alpha] = getColor(boardIdx, boardColorLookup, highlightIndex);
+            
             worldBoardCoords = bsxfun(@plus, R * wpConvexHull, t);            
 
             [xIdx, yIdx, zIdx] = getAxesIdx();
             
-            wX = worldBoardCoords(xIdx,:) + camLabel2 * 1000;
-            wY = worldBoardCoords(yIdx,:) + sign * randi(1000);
-            wZ = worldBoardCoords(zIdx,:) + sign * randi(500);
+            wX = worldBoardCoords(xIdx,:);
+            wY = worldBoardCoords(yIdx,:);
+            wZ = worldBoardCoords(zIdx,:);
 
             h = patch(wX,wY,wZ, color, 'Parent', hAxes);
             
@@ -328,7 +327,7 @@ end
         % plot camera 1
         [center1, hHggroup1] = plotMovingCam(rotation, translation, ...
             camColor, alpha, camIdx, highlightIndex);
-        labelStereoCamera(hHggroup1, center1, char(string(camLabel1)), camColor);
+        labelStereoCamera(hHggroup1, center1, '1', camColor);
         
         % plot camera 2
         t = cameraParams.CameraParameters2.TranslationVectors(camIdx,:)';
@@ -536,7 +535,7 @@ end
             color1 = 'b';
             plotOneFixedCamera(camPts, color1);
             plotFixedCameraAxis(hAxes, camAxis);
-            labelFixedCamera(hAxes, camPts, char(string(camLabel1)), color1);
+            labelFixedCamera(hAxes, camPts, '1', color1);
             
             t = cameraParams.TranslationOfCamera2;
             R = cameraParams.RotationOfCamera2;
@@ -547,7 +546,7 @@ end
             set(hAxes, 'NextPlot', 'add');
             color2 = 'r';
             plotOneFixedCamera(camPts2, color2);
-            labelFixedCamera(hAxes, camPts2, char(string(camLabel2)), color2);
+            labelFixedCamera(hAxes, camPts2, '2', color2);
             set(hAxes, 'NextPlot', holdState); % restore the state
         else
             plotOneFixedCamera(camPts, 'b');
