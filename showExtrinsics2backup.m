@@ -1,4 +1,4 @@
-function ax = showExtrinsics2(cameraParams, camLabel2, camLabel1, varargin)
+function ax = showExtrinsics2backup(cameraParams, camLabel1, camLabel2, varargin)
 %showExtrinsics Visualize extrinsic camera parameters.
 %   showExtrinsics(cameraParams) renders a 3-D visualization of extrinsic 
 %   parameters of a single calibrated camera or a calibrated stereo pair. 
@@ -229,18 +229,19 @@ end
         [rotationMatrices, translationVectors] = ...
             getRotationAndTranslation(cameraParams);
         sign = 1;
-        for boardIdx = 1:numBoards
+        for boardIdx = randi(numBoards,1,3)
             sign = -sign;
             R = rotationMatrices(:, :, boardIdx)';
             t = translationVectors(boardIdx, :)';
-            [color, alpha] = getColor(boardIdx, boardColorLookup, highlightIndex);
+            [~, alpha] = getColor(boardIdx, boardColorLookup, highlightIndex);
+            color = [rand(1), rand(1), rand(1)];
             worldBoardCoords = bsxfun(@plus, R * wpConvexHull, t);            
 
             [xIdx, yIdx, zIdx] = getAxesIdx();
             
-            wX = worldBoardCoords(xIdx,:);
-            wY = worldBoardCoords(yIdx,:);
-            wZ = worldBoardCoords(zIdx,:);
+            wX = worldBoardCoords(xIdx,:) + camLabel2 * 1000;
+            wY = worldBoardCoords(yIdx,:) + sign * randi(1000);
+            wZ = worldBoardCoords(zIdx,:) + sign * randi(500);
 
             h = patch(wX,wY,wZ, color, 'Parent', hAxes);
             
@@ -255,10 +256,10 @@ end
                     'Tag',tagStr);
             
             % label each board
-            ulCorner = t - 0.3*[offset; offset; 0];
-            text(ulCorner(xIdx),ulCorner(yIdx),ulCorner(zIdx),...
-                num2str(boardIdx),'fontsize',14,'color',color, ...
-                'Parent', hAxes);
+%             ulCorner = t - 0.3*[offset; offset; 0];
+%             text(ulCorner(xIdx),ulCorner(yIdx),ulCorner(zIdx),...
+%                 num2str(boardIdx),'fontsize',14,'color',color, ...
+%                 'Parent', hAxes);
         end        
         labelPlotAxesCameraCentric(hAxes);                
     end

@@ -1,8 +1,8 @@
-%% Calibrate Kinect RGB-D cameras
+%% Calibrate Kinect RGB-D cameras (intrinsic parameters)
 
 default_square_size = 90; % mm
 
-% Grab Kinect info from csv file
+% Grab Kinect info from text file
 generateKinectInfoFile();
 
 if ~exist('KinectInfo', 'var')
@@ -31,10 +31,9 @@ h = waitbar(0, 'Please Wait...');
 
 if exist('KinectParams.mat', 'file') == 2
     load('KinectParams.mat');
-else    
+else
     KinectParams = struct('deviceID', [], 'deviceSerialNumber', [],...
-        'channel', [], 'intrinsicParams', [], ...
-        'deviceParams', [], 'calibrationDate', [], 'calibrationTime', []);
+        'channel', [], 'intrinsicParams', [], 'extrinsicParams', []);
 end
 
 local_idx = 1;
@@ -49,11 +48,12 @@ for i = 1 : length(KinectInfo)
     local_idx = local_idx + 2;
 end
 
+
 for i = 1:length(devices)
     
     id = devices(i);
     idx = find([KinectParams.deviceID] == id & string({KinectParams.channel}) == calibration_channel);
-
+    
     serial = KinectParams(idx).deviceSerialNumber;
     im_folder = strcat('Kinect_', serial, filesep, calibration_channel, filesep);
     
@@ -65,24 +65,25 @@ for i = 1:length(devices)
         continue;
     end
     
+    cur_date = datestr(datetime('now'), 'dd-mm-yyyy');
+    cur_time = datestr(datetime('now'), 'HH:MM:SS');
+    
     cameraParams = calibrate(square_size, id, serial, im_folder);
     
     if isempty(cameraParams)
         continue;
     end
     
-    cur_date = datestr(datetime('now'), 'dd-mm-yyyy');
-    cur_time = datestr(datetime('now'), 'HH:MM:SS');
-    
-    KinectParams(idx).intrinsicParams = struct('fx', [], 'fy', [], 'cx', [], 'cy', [], 's', []);
+    KinectParams(idx).intrinsicParams = struct('fx', [], 'fy', [], 'cx', [], 'cy', [], 's', [], ...
+        'all', [], 'calibrationDate', [], 'calibrationTime', []);
     KinectParams(idx).intrinsicParams.fx = cameraParams.FocalLength(1);
     KinectParams(idx).intrinsicParams.fy = cameraParams.FocalLength(2);
     KinectParams(idx).intrinsicParams.cx = cameraParams.PrincipalPoint(1);
     KinectParams(idx).intrinsicParams.cy = cameraParams.PrincipalPoint(2);
     KinectParams(idx).intrinsicParams.s  = 0;
-    KinectParams(idx).deviceParams = cameraParams;
-    KinectParams(idx).calibrationDate = cur_date;
-    KinectParams(idx).calibrationTime = cur_time;
+    KinectParams(idx).intrinsicParams.all = cameraParams;
+    KinectParams(idx).intrinsicParams.calibrationDate = cur_date;
+    KinectParams(idx).intrinsicParams.calibrationTime = cur_time;
     
     waitbar(i/length(devices), h, sprintf(['Calibrated ', num2str(i),...
         '/', num2str(length(devices)), ' device(s)']));
@@ -91,8 +92,6 @@ end
 delete(h);
 
 save('KinectParams', 'KinectParams');
-
-% getIntrinsics
 
 %% Ask if the user wants to calibrate another device
 
