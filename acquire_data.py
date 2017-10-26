@@ -16,9 +16,6 @@ from get_intrinsics import *
 # Determine full path of the directory the program resides in
 program_directory = os.path.abspath(os.path.curdir)
 
-# Specify the size of the target (ncols, nrows) - internal corners only
-pattern_size = (9, 7)
-
 # Obtain the current time (to the second) - Used for image filenames
 time_stamp = datetime.now().strftime('%Y-%m-%d-%H%M%S-')
 time_stamp_overlap = datetime.now().strftime('%Y-%m-%d-')
@@ -135,13 +132,12 @@ while True:
         im_name = time_stamp + format(capture_count, '04')
         capture_count += 1
         frame_count = frame_freq
-        if True:  # checkFrame(rgb_frame_full, pattern_size):
-            add_spot(rgb_frame_show, int(rgb_width / rgb_scale), 'green')
-            cv2.imshow("color", rgb_frame_show)
-            if move_windows: cv2.moveWindow("color", d_width, d_height + height_offset)
-            # Save the current RGB frame (named by current time)
-            save_frame(write_dir_rgb, im_name, rgb_frame_save)
-            save_frame(write_dir_d, im_name, depth_frame_save)
+        add_spot(rgb_frame_show, int(rgb_width / rgb_scale), 'green')
+        cv2.imshow("color", rgb_frame_show)
+        if move_windows: cv2.moveWindow("color", d_width, d_height + height_offset)
+        # Save the current RGB frame (named by current time)
+        save_frame(write_dir_rgb, im_name, rgb_frame_save)
+        save_frame(write_dir_d, im_name, depth_frame_save)
     # Display a red circle on the colour frame if in standby mode.
     else:
         add_spot(rgb_frame_show, int(rgb_width / rgb_scale), 'red')

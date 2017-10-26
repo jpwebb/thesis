@@ -31,6 +31,7 @@ h = waitbar(0, 'Please Wait...');
 
 if exist('KinectParams.mat', 'file') == 2
     load('KinectParams.mat');
+    KinectParams = checkParams(KinectParams, KinectInfo);
 else
     KinectParams = struct('deviceID', [], 'deviceSerialNumber', [],...
         'channel', [], 'intrinsicParams', [], 'extrinsicParams', []);

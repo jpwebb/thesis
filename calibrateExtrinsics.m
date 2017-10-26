@@ -25,7 +25,7 @@ min_images = 3;
 if length(imageFileNames1) < min_images
     warning_msg = ['Only ', num2str(length(imageFileNames1)), ' image(s) found!',...
         ' The minimum required number of images for calibration is ', num2str(min_images),...
-        ' (', device_type1, ' device: ID ', num2str(id1), ', Serial Number ', serial1, ').\n\n'];
+        ' (', device_type1, ' device: ID ', num2str(id1), ', Serial Number ', serial1, ').\n'];
     my_warning(warning_msg);
     stereoParams = [];
     return;
@@ -36,7 +36,14 @@ imageFileNames2 = getImageList(im_folder2);
 if length(imageFileNames2) < min_images
     warning_msg = ['Only ', num2str(length(imageFileNames2)), ' image(s) found!',...
         ' The minimum required number of images for calibration is ', num2str(min_images),...
-        ' (', device_type2, ' device: ID ', num2str(id2), ', Serial Number ', serial2, ').\n\n'];
+        ' (', device_type2, ' device: ID ', num2str(id2), ', Serial Number ', serial2, ').\n'];
+    my_warning(warning_msg);
+    stereoParams = [];
+    return;
+end
+
+if length(imageFileNames1) ~= length(imageFileNames2)
+    warning_msg = 'Both folders must contain the same number of images.\n';
     my_warning(warning_msg);
     stereoParams = [];
     return;
@@ -46,15 +53,12 @@ end
 [imagePoints, boardSize, imagesUsed] = detectCheckerboardPoints2(imageFileNames2, imageFileNames1, 'ShowProgressBar', 1);
 
 if sum(imagesUsed) < min_images
-    warning_msg = ['Calibration target only detected in ', num2str(sum(imagesUsed)), ' image(s)!',...
-        ' The minimum required number of images for calibration is ', num2str(min_images), '.\n\n'];
+    warning_msg = ['Not enough image pairs found.\n', num2str(sum(imagesUsed)), ' pair(s) found, ',...
+        'the minimum number required for extrinsic calibration is ', num2str(min_images), '.\n'];
     my_warning(warning_msg);
     stereoParams = [];
     return;
 end
-
-imageFileNames1 = imageFileNames1(imagesUsed);
-imageFileNames2 = imageFileNames2(imagesUsed);
 
 %% 3. Read the first image to obtain image size
 originalImage = imread(imageFileNames1{1});
